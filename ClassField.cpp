@@ -16,6 +16,13 @@ Game_Field::Game_Field() {
 	second_player_is_server = false;
 }
 
+Game_Field* Game_Field::getInstance()
+{
+	if (!p_instance)
+		p_instance = new Game_Field();
+	return p_instance;
+}
+
 void Game_Field::change_size_of_field(int new_size)
 {
 	delete[] cell;
@@ -42,11 +49,15 @@ void Game_Field::set_opponent(bool opponent_type) {
 	second_player_is_server = opponent_type;
 }
 
+bool Game_Field::opponent_is_server()
+{
+	return second_player_is_server;
+}
+
 bool Game_Field::set_cell_value(int x, int y, int value) {
-	int cell_position = (x - 1) * Size_of_Field + (y - 1);
+	int cell_position = x * Size_of_Field + y;
 	if (cell[cell_position].isFilled)
 	{
-		cout << "Cell is just filled. Choose another cell." << endl;
 		return false;
 	}
 	else
@@ -116,8 +127,8 @@ void Game_Field::move_of_server() {
 	bool successfull_set;
 	int coordinate_x, coordinate_y;
 	do {
-		coordinate_x = (rand() % Size_of_Field) + 1;
-		coordinate_y = (rand() % Size_of_Field) + 1;
+		coordinate_x = (rand() % Size_of_Field);
+		coordinate_y = (rand() % Size_of_Field);
 		successfull_set = set_cell_value(coordinate_x, coordinate_y, false);
 	} while (!successfull_set);
 }
